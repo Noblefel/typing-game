@@ -102,7 +102,7 @@ document.querySelector("#space").addEventListener("click", (e) => {
 document.addEventListener("DOMContentLoaded", async () => {
   const res = await fetch("./words.txt");
   const text = await res.text();
-  words = text.split("\r\n");
+  words = text.replace(/(\r\n|\n|\r)/gm, " ").split(" ");
 
   generateText();
 });
