@@ -5,10 +5,10 @@ let words;
 let level = 1;
 let typed = 0;
 let wrong = 0;
+let spaces;
 
 let timerTimeout;
 let timerInterval;
-let spaces = true;
 
 const letters = document.querySelector("#letters");
 const progress = document.querySelector("progress");
@@ -70,7 +70,7 @@ document.addEventListener("keypress", (e) => {
     return;
   }
 
-  if (spaces && el.nextSibling.innerText == " ") {
+  if (!spaces && el.nextSibling.innerText == " ") {
     cursor++;
   }
 
