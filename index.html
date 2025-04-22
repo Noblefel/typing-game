@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>typing game</title>
+    <meta
+      name="description"
+      content="simple typing game where you have 40 health, you lose 1 with a typo, or 10 if the time runs out. See if you can reach level 8"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="info">
+        <p>
+          <span>❤️</span>
+          <b id="lives">40</b>
+        </p>
+        <p>Level <span id="level">1</span></p>
+      </div>
+
+      <div class="box">
+        <p id="letters"></p>
+      </div>
+
+      <div class="info-bottom">
+        <p>Typed: <span id="typed">0</span></p>
+        <p>Wrong: <span id="wrong">0</span></p>
+
+        <label>
+          <input type="checkbox" id="space" checked />
+          <span>Ignore space</span>
+        </label>
+
+        <p id="reset">Reset</p>
+      </div>
+
+      <p><i>Start typing!</i></p>
+
+      <progress></progress>
+    </div>
+  </body>
+</html>
