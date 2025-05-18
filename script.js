@@ -13,36 +13,34 @@ let timerInterval;
 const letters = document.querySelector("#letters");
 const progress = document.querySelector("progress");
 
-document.addEventListener("keypress", (e) => {
+document.addEventListener("keydown", (e) => {
+  const lower = e.key.charCodeAt() >= 65 && e.key.charCodeAt() <= 90;
+  const upper = e.key.charCodeAt() >= 97 && e.key.charCodeAt() <= 122;
+  const alpha = (lower || upper) && e.key.length == 1;
+
+  if (!alpha && e.key != "Backspace" && e.key != " ") {
+    return;
+  }
+
   if (!progress.value) {
-    const sc = 5 + Math.max(20 - level * 3, 0);
-    const ms = sc * 1000;
-
-    progress.max = ms;
-    progress.value = ms;
-
-    timerInterval = setInterval(() => {
-      progress.value -= 40;
-      const percent = progress.value / ms;
-
-      if (percent < 0.3) {
-        progress.className = "low";
-      } else if (percent < 0.6) {
-        progress.className = "med";
-      }
-    }, 40);
-
-    timerTimeout = setTimeout(() => {
-      resetTimer();
-      addLives(-10);
-
-      letters.innerHTML = "";
-      generateText();
-      cursor = 0;
-    }, ms);
+    startTimer();
   }
 
   const el = letters.children[cursor];
+
+  if (e.key == "Backspace") {
+    if (cursor == 0) return;
+
+    if (!spaces && el.previousSibling.innerText == " ") {
+      el.className = "";
+      cursor--;
+    }
+
+    cursor--;
+    letters.children[cursor + 1].className = "";
+    letters.children[cursor].className = "cursor";
+    return;
+  }
 
   typed++;
   document.querySelector("#typed").innerText = typed;
@@ -58,9 +56,19 @@ document.addEventListener("keypress", (e) => {
   }
 
   if (!el.nextSibling) {
-    resetTimer();
-    addLives(5);
+    let correct = 0;
 
+    for (const l of letters.children) {
+      if (l.className == "correct" || l.className == "") {
+        correct++;
+      }
+    }
+
+    const percent = correct / letters.children.length;
+    const hp = Math.floor(percent * 20);
+    addLives(hp);
+
+    resetTimer();
     letters.innerHTML = "";
     generateText();
     cursor = 0;
@@ -129,7 +137,7 @@ function addLives(n) {
 
   lives = Math.min(40, lives + n);
   document.querySelector("#lives").innerText = lives;
-  document.querySelector("#lives").parentNode.appendChild(span);
+  document.querySelector("#add-lives").appendChild(span);
   setTimeout(() => span.remove(), 500);
 }
 
@@ -150,6 +158,34 @@ function generateText() {
   }
 
   letters.children[0].classList.add("cursor");
+}
+
+function startTimer() {
+  const sc = 5 + Math.max(20 - level * 3, 0);
+  const ms = sc * 1000;
+
+  progress.max = ms;
+  progress.value = ms;
+
+  timerInterval = setInterval(() => {
+    progress.value -= 40;
+    const percent = progress.value / ms;
+
+    if (percent < 0.3) {
+      progress.className = "low";
+    } else if (percent < 0.6) {
+      progress.className = "med";
+    }
+  }, 40);
+
+  timerTimeout = setTimeout(() => {
+    resetTimer();
+    addLives(-10);
+
+    letters.innerHTML = "";
+    generateText();
+    cursor = 0;
+  }, ms);
 }
 
 function resetTimer() {
